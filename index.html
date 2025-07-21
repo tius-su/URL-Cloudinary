@@ -1546,7 +1546,7 @@
                     loadGallery(data.resource_type === 'image' ? 'photo' : 'video');
                     loadAlbums(); // Perbarui jumlah album
 
-                    // Clear the file input and switch back to the main gallery tab
+                    // Clear the file input dan switch back to the main gallery tab
                     document.getElementById('fileInput').value = '';
                     if (data.resource_type === 'image') {
                         switchTab('gallery-photo');
@@ -1660,43 +1660,70 @@
                         });
                     }
 
-                    galleryEl.innerHTML += `
-                        <div class="media-card">
-                            <div class="media-content">
-                                ${media.type === 'image' ?
-                                    `<img src="${media.url}" alt="${media.name}">` :
-                                    `<video src="${media.url}" controls></video>`}
-                                <div class="media-overlay">
-                                    <span class="media-type">${media.type === 'image' ? 'Foto' : 'Video'}</span>
-                                    <div class="media-date">${dateText}</div>
+                    if (media.type === 'image') {
+                        galleryEl.innerHTML += `
+                            <div class="media-card">
+                                <div class="media-content">
+                                    <img src="${media.url}" alt="${media.name}">
+                                    <div class="media-overlay">
+                                        <span class="media-type">Foto</span>
+                                        <div class="media-date">${dateText}</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="media-actions">
-                                <button class="action-btn like-btn ${media.likes > 0 ? 'liked' : ''}" title="Suka"
-                                    onclick="toggleLike('${media.id}', '${media.type}', ${media.likes || 0})">
-                                    <i class="fas fa-heart"></i> <span class="like-count">${media.likes || 0}</span>
-                                </button>
-                                <button class="action-btn" title="Salin link" onclick="copyToClipboard('${media.url}')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                ${media.type === 'image' ? `
-                                    <button class="action-btn" title="Salin ke Album" onclick="openCopyToAlbumModal('${media.id}')">
-                                        <i class="fas fa-clone"></i>
+                                <div class="media-actions">
+                                    <button class="action-btn like-btn ${media.likes > 0 ? 'liked' : ''}" title="Suka"
+                                        onclick="toggleLike('${media.id}', '${media.type}', ${media.likes || 0})">
+                                        <i class="fas fa-heart"></i> <span class="like-count">${media.likes || 0}</span>
                                     </button>
-                                ` : `
+                                    <button class="action-btn" title="Salin link" onclick="copyToClipboard('${media.url}')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
                                     <button class="action-btn" title="Pindahkan ke Album" onclick="openMoveToAlbumModal('${media.id}', '${media.type}')">
                                         <i class="fas fa-folder-plus"></i>
                                     </button>
-                                `}
-                                <a href="${media.url}" download class="action-btn" title="Download">
-                                    <i class="fas fa-download"></i>
-                                </a>
-                                <a href="https://wa.me/?text=${encodeURIComponent(media.url)}" target="_blank" class="action-btn" title="Bagikan via WhatsApp">
-                                    <i class="fab fa-whatsapp"></i>
-                                </a>
+                                    <button class="action-btn" title="Salin ke Album" onclick="openCopyToAlbumModal('${media.id}')">
+                                        <i class="fas fa-clone"></i>
+                                    </button>
+                                    <a href="${media.url}" download class="action-btn" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                    <a href="https://wa.me/?text=${encodeURIComponent(media.url)}" target="_blank" class="action-btn" title="Bagikan via WhatsApp">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    } else if (media.type === 'video') {
+                        galleryEl.innerHTML += `
+                            <div class="media-card">
+                                <div class="media-content">
+                                    <video src="${media.url}" controls></video>
+                                    <div class="media-overlay">
+                                        <span class="media-type">Video</span>
+                                        <div class="media-date">${dateText}</div>
+                                    </div>
+                                </div>
+                                <div class="media-actions">
+                                    <button class="action-btn like-btn ${media.likes > 0 ? 'liked' : ''}" title="Suka"
+                                        onclick="toggleLike('${media.id}', '${media.type}', ${media.likes || 0})">
+                                        <i class="fas fa-heart"></i> <span class="like-count">${media.likes || 0}</span>
+                                    </button>
+                                    <button class="action-btn" title="Salin link" onclick="copyToClipboard('${media.url}')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <button class="action-btn" title="Pindahkan ke Album" onclick="openMoveToAlbumModal('${media.id}', '${media.type}')">
+                                        <i class="fas fa-folder-plus"></i>
+                                    </button>
+                                    <a href="${media.url}" download class="action-btn" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                    <a href="https://wa.me/?text=${encodeURIComponent(media.url)}" target="_blank" class="action-btn" title="Bagikan via WhatsApp">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    }
                 });
 
                 // Render paginasi
